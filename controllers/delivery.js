@@ -2,73 +2,76 @@ const deliveryService = require("../service/delivery");
 
 async function createdelivery(req, res, next) {
     try {
-        const { order_id, deliveryaddress } = req.body
+        const { order_id, deliveryaddress } = req.body;
 
-        const delivery = await deliveryService.createdelivery(order_id, deliveryaddress);
+        const delivery = await deliveryService.createDelivery(order_id, deliveryaddress);
 
         res.status(200).json({
             success: true,
             Message: "delivery created successfully",
             data: delivery
-        })
+        });
     }
     catch (error) {
-        ;
-        next(error)
+        next(error);
     }
 }
 
 //all deliveryies
 async function getalldelivery(req, res, next) {
     try {
-        const deliveries = await deliveryService.getalldelivery();
+        const deliveries = await deliveryService.getAllDeliveries();
 
         res.status(200).json({
             success: true,
             Message: "got all deliveries",
             data: deliveries
-        })
+        });
     }
     catch (error) {
-        next(error)
+        next(error);
     }
 }
-async function getdeliverybyid(res, req, next) {
+async function getdeliverybyid(req, res, next) {
     try {
         const id = req.params.id;
-        const delivery = await deliveryService.getdeliverybyid(id);
+        const delivery = await deliveryService.getDeliveryById(id);
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             Message: "got the delivery by id",
             data: delivery
-        })
+        });
     }
     catch (error) {
-        throw (error);
+        next(error);
     }
 }
 
 // update delivery
-
-async function updatedeliverystaus(res, req, next) {
+async function updatedeliverystaus(req, res, next) {
     try {
         const id = req.params.id;
-        const { status } = req.body
-        const delivery = await deliveryService.updatedeliverystaus(id, status)
-        res, status(201).json({
+        const { status } = req.body;
+        const delivery = await deliveryService.updateDeliveryStatus(id, status);
+        res.status(200).json({
             success: true,
             message: "updated successfully",
             data: delivery
-        })
+        });
     }
     catch (error) {
-        next(error)
+        next(error);
     }
 }
+
 module.exports = {
-    createDelivery,
-    getAllDeliveries,
-    getDeliveryById,
-    updateDeliveryStatus,
+    createDelivery: createdelivery,
+    getAllDeliveries: getalldelivery,
+    getDeliveryById: getdeliverybyid,
+    updateDeliveryStatus: updatedeliverystaus,
+    createdelivery,
+    getalldelivery,
+    getdeliverybyid,
+    updatedeliverystaus,
 };

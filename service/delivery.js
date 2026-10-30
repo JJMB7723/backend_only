@@ -80,7 +80,8 @@ async function updateDeliveryStatus(id, status) {
 module.exports = {
     createDelivery,
     getAllDeliveries,
-    getDeliveryById,
+    getDeliveryById: getdliverybyid,
+    getdliverybyid,
     updateDeliveryStatus,
 };
 

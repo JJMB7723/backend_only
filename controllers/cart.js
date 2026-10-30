@@ -75,6 +75,9 @@ async function removeItem(req, res, next) {
 }
 
 module.exports = {
+    addItem: additem,
+    getCart: getcart,
+    updateItem: updateitem,
     additem,
     getcart,
     updateitem,

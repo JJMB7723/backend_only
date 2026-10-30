@@ -3,27 +3,26 @@ const jwt = require("jsonwebtoken");
 const authModel = require("../models/auth");
 
 // new customer registration
-
-async function registercustomer(name, email, password) {
-    if (name || name.trim() === "") {
-        const error = new Error("name is required")
-        error.stautscode = 400;
+async function registerCustomer(name, email, password) {
+    if (!name || name.trim() === "") {
+        const error = new Error("name is required");
+        error.statusCode = 400;
         throw error;
     }
-    if (email || email.trim() === "") {
-        const error = new Eroor("email is required")
-        error.statuscode = 400;
+    if (!email || email.trim() === "") {
+        const error = new Error("email is required");
+        error.statusCode = 400;
         throw error;
     }
-    if (password || password < 6 === "") {
-        const error = new Error("check ur passsword")
-        error.stautscode = 400;
+    if (!password || password.length < 6) {
+        const error = new Error("check ur password (minimum 6 characters)");
+        error.statusCode = 400;
         throw error;
     }
-    const existingcustomer = await authModel.getcustomerbyemail(email.trim());
-    if (existingcustomer) {
-        const error = new Error("email already exists")
-        error.statuscode = 400;
+    const existingCustomer = await authModel.getCustomerByEmail(email.trim());
+    if (existingCustomer) {
+        const error = new Error("email already exists");
+        error.statusCode = 400;
         throw error;
     }
     const salt = await bcrypt.genSalt(10);
@@ -34,23 +33,24 @@ async function registercustomer(name, email, password) {
     return customer;
 }
 
-//LOGIN existing customer
-async function logincustomer(req, res, next) {
-    if (email || email.trim() === ""); {
-        const error = new Error("email is required")
-        error.stautscode = 400;
+// LOGIN existing customer
+async function loginCustomer(email, password) {
+    if (!email || email.trim() === "") {
+        const error = new Error("email is required");
+        error.statusCode = 400;
         throw error;
     }
-    if (password);
-    const error = new Error("entre the correct password")
-    error.stautuscode = 400;
-    throw error;
+    if (!password) {
+        const error = new Error("enter the correct password");
+        error.statusCode = 400;
+        throw error;
+    }
 
-    //find customer by email id 
-    const customer = await authModel.getcustomerbyemail(email.trim());
-    if (customer) {
-        const error = new Error("invalid password or email")
-        error.statuscode = 400;
+    // find customer by email id
+    const customer = await authModel.getCustomerByEmail(email.trim());
+    if (!customer) {
+        const error = new Error("invalid password or email");
+        error.statusCode = 400;
         throw error;
     }
     const isPasswordCorrect = await bcrypt.compare(password, customer.password);
@@ -65,7 +65,7 @@ async function logincustomer(req, res, next) {
             name: customer.name,
             email: customer.email,
         },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || "default_jwt_secret",
         { expiresIn: "24h" }
     );
     return {
@@ -81,4 +81,6 @@ async function logincustomer(req, res, next) {
 module.exports = {
     registerCustomer,
     loginCustomer,
+    registercustomer: registerCustomer,
+    logincustomer: loginCustomer,
 };

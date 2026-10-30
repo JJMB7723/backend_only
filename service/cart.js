@@ -99,8 +99,11 @@ async function removeItem(customerId, itemId) {
 
 module.exports = {
     getOrCreateCart,
-    addItemToCart,
+    addItemToCart: additemtocart,
+    additemtocart,
+    getcartwithitem: getCartWithItems,
+    updateitemquantity,
     getCartWithItems,
-    updateItemQuantity,
+    updateItemQuantity: updateitemquantity,
     removeItem,
 };
